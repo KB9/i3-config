@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Scrape xrandr output for the required values
+new_brightness=1.0
+option=$1
+output=$(xrandr -q | grep "connected" | grep -v "disconnected" | awk '{print $1;}')
+brightness=$(xrandr --verbose | grep "Brightness" | awk '{print $2;}')
+
+# Print the brightness value if no arguments are supplied
+if [ $# -eq 0 ]; then
+	echo "$(bc <<< "scale=0; $brightness*100/1")%"
+	exit
+fi
+
+# Define the clamp function to only allow brightnesses within a certain range
+clamp_function="
+define clamp (n) {
+	if (n > 1.0) n = 1.0;
+	if (n < 0.1) n = 0.1;
+	return n;
+}"
+
+# Perform floating-point arithmetic to determine new brightness value
+if [ "$1" == "-inc" ]; then
+	new_brightness=$(bc <<< "scale=1; $clamp_function; clamp($brightness+0.1)")
+elif [ "$1" == "-dec" ]; then
+	new_brightness=$(bc <<< "scale=1; $clamp_function; clamp($brightness-0.1)")
+fi
+
+# Set the new screen brightness value
+xrandr --output $output --brightness $new_brightness
