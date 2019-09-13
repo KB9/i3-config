@@ -160,9 +160,9 @@ bar {
         background #404040
         statusline #e7dfd9
         separator  #000000
-        focused_workspace  #2aa198 #073642 #eee895
-        active_workspace   #073642 #859900 #839496
-        inactive_workspace #002b36  #002b36   #586e75
+        focused_workspace  #d0d0d0 #c0c0c0 #000000
+        active_workspace   #505050 #404040 #eeeeee
+        inactive_workspace #505050  #404040   #eeeeee
         urgent_workspace   #cb4b16 #dc322f #fdf6e3
     }
   }
@@ -207,7 +207,7 @@ exec xinput set-prop 11 279 1
 bindsym --release $mod+p exec scrot -s -e 'mv $f /tmp/ && eog /tmp/$f'
 
 # Wallpaper
-exec --no-startup-id exec feh --bg-scale ~/.fehbg.jpeg
+exec --no-startup-id exec feh --bg-scale ~/.config/i3/wallpaper.jpg
 
 # Monitor switching
 bindsym $mod+m exec --no-startup-id ~/.config/i3/monitor
