@@ -1,0 +1,5 @@
+i3pystatus
+psutil
+colour
+netifaces==0.10.5
+basiciw
