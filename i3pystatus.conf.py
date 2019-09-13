@@ -6,7 +6,23 @@ import os.path
 
 from i3pystatus import Status
 from i3pystatus.updates import aptget
+from i3pystatus import IntervalModule
 
+class brightness(IntervalModule):
+    interval = 1
+
+    def get_brightness(self):
+        command = "xrandr --verbose | grep \"Brightness\" | awk '{print $2;}'"
+        result = subprocess.check_output(command, shell=True) # Byte string with \n
+        result = result.decode("utf-8").strip() # To UTF-8 string
+        value = float(result) * 100.0
+        value = int(value)
+        return value
+
+    def run(self):
+        self.output = {
+            "full_text": "💡 %s%%" % str(self.get_brightness())
+        }
 
 status = Status()
 
@@ -83,27 +99,12 @@ status.register("disk",
     on_leftclick="pcmanfm",
     format="🏠 {avail} GB",)
 
-# status.register("text",
-#     text="|",
-#     color="#222222")
-
 status.register("disk",
     hints = {"separator": False, "separator_block_width": 3},
     color='#ABB2BF',
     path="/",
     format="💽 {avail} GB",)
 
-#status.register('ping',
-#    format_disabled='',
-#    color='#61AEEE')
-
-status.register("keyboard_locks",
-    format='{caps} {num}',
-    caps_on='Caps Lock',
-    caps_off='',
-    num_on='Num On',
-    num_off='',
-    color='#e60053',
-    )
+status.register(brightness)
 
 status.run()
