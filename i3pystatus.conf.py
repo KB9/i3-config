@@ -24,6 +24,18 @@ class brightness(IntervalModule):
             "full_text": "💡 %s%%" % str(self.get_brightness())
         }
 
+class monitor(IntervalModule):
+    interval = 1
+
+    def get_mode(self):
+        file = open("/tmp/monitor_mode.dat", "r")
+        return file.read().strip()
+
+    def run(self):
+        self.output = {
+            "full_text": "🖥 %s" % self.get_mode()
+        }
+
 status = Status()
 
 # Displays clock like this:
@@ -106,5 +118,6 @@ status.register("disk",
     format="💽 {avail} GB",)
 
 status.register(brightness)
+status.register(monitor)
 
 status.run()
